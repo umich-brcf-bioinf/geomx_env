@@ -1,51 +1,30 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_15
-
-RUN Rscript -e "\
-    BiocManager::install(version='3.15'); \
-    BiocManager::install('NanoStringNCTools'); \
-    BiocManager::install('GeomxTools'); \
-    BiocManager::install('GeoMxWorkflows');"
+FROM bioconductor/bioconductor_docker:RELEASE_3_14
 
 RUN Rscript -e "\
     BiocManager::install(c(\
-        'AnnotationDbi', \
-        'AnnotationFilter', \
-        'BiocGenerics', \
-        'EnsDb.Mmusculus.v79', \
-        'EnsDb.Hsapiens.v75', \
-        'GenomeInfoDb', \
-        'GenomicFeatures', \
-        'GenomicRanges', \
-        'ggbio', \
-        'IRanges', \
-        'motifmatchr', \
-        'multtest', \
-        'Rsamtools', \
-        'S4Vectors', \
-        'ggbio', \
-        'motifmatchr')); \
-    install.packages(c(\  
-        'cowplot', \
-        'knitr', \
-        'ggiraph', \
+        'GeoMxWorkflows')); \
+    install.packages(c(\ 
         'EnvStats', \
+        'ggiraph', \
+        'knitr', \ 
+        'scales', \
+        'gridExtra', \
+        'grid', \
+        'ggrepel', \
+        'reshape2', \
+        'Rtsne', \
+        'umap', \
         'readxl', \
         'xlsx', \
+        'cowplot', \
+        'dplyr', \
+        'ggplot2',\
         'ggforce', \
+        'patchwork',\
+        'reticulate', \
         'randomcoloR', \
         'RColorBrewer', \
         'pheatmap', \
-        'Rtsne', \
-        'umap', \
-        'dplyr', \
-        'ggplot2',\
-        'hdf5r',\
-        'patchwork',\
-        'reticulate', \
-        'grid', \
-        'gridExtra', \
-        'ggrepel', \
-        'reshape2', \
         'tidyverse'));"
 
 RUN Rscript -e "\
@@ -70,10 +49,6 @@ ENV PATH=/miniconda/bin:${PATH}
 RUN mkdir -p /root/.local/share && \
     echo "/miniconda/bin/conda" > /root/.local/share/r-miniconda
 
-RUN Rscript -e "\
-    library(reticulate); \
-    conda_install(env_name='umap-learn', packages='umap-learn');"
-
 RUN apt-get update && \
     apt-get install -y libxkbcommon-x11-0 && \
     wget -P /tmp/ https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.2.5033-amd64.deb && \
@@ -81,4 +56,9 @@ RUN apt-get update && \
 
 RUN apt-get install -y libboost-all-dev && \
     Rscript -e "\
-        BiocManager::install('pcaMethods');"
+        BiocManager::install('pcaMethods'); \
+        library(devtools); \
+        install_github('Nanostring-Biostats/NanoStringNCTools'); \
+        install_github('Nanostring-Biostats/GeomxTools'); \
+        install_github('Nanostring-Biostats/GeoMxWorkflows');"
+
