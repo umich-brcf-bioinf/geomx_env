@@ -1,10 +1,4 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_15
-
-RUN Rscript -e "\
-    BiocManager::install(version='3.15'); \
-    BiocManager::install('NanoStringNCTools'); \
-    BiocManager::install('GeomxTools'); \
-    BiocManager::install('GeoMxWorkflows');"
+FROM bioconductor/bioconductor_docker:RELEASE_3_14
 
 RUN Rscript -e "\
     BiocManager::install(c(\
@@ -82,3 +76,12 @@ RUN apt-get update && \
 RUN apt-get install -y libboost-all-dev && \
     Rscript -e "\
         BiocManager::install('pcaMethods');"
+
+RUN apt-get install -y libboost-all-dev && \
+    Rscript -e "\
+        library(devtools); \
+        install_github('Nanostring-Biostats/NanoStringNCTools'); \
+        install_github('Nanostring-Biostats/GeomxTools', ref = 'dev'); \
+        install_github('Nanostring-Biostats/GeoMxWorkflows', ref = 'main');"
+
+
